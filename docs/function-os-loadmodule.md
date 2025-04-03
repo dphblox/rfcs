@@ -48,6 +48,12 @@ local module2 = os.loadmodule("../foo/bar")
 print(module == module2) --> false
 ```
 
+These objects are intentionally not compatible with `setfenv()` or `getfenv()`.
+
+```Lua
+getfenv(module) --> invalid argument #1 to 'getfenv' (number expected, got module)
+```
+
 When passed into `require`, the loaded module will be run, and the result will conceptually be cached "inside of" the module object. That is to say, if two modules are `==`, they will share the same cache.
 
 This does not change the current global caching behaviour of `require()` for non-`module` arguments.
