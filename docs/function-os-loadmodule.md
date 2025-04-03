@@ -83,27 +83,6 @@ print(require(first))
 
 (Note that this does not change the current global caching behaviour of `require()` for non-`module` arguments.)
 
-When no references are left to a `module` object, it will be garbage collected, and the Luau VM is allowed to free any loaded module information or caches related to that module. Garbage collection behaviour is the key motivator for `module` objects.
-
-```Lua
-do
-    -- module is loaded here
-    local myModule = os.loadmodule("../foo/bar")
-    -- the returned value is internally cached here
-    local data = require(myModule)
-    -- the cache can be used here
-    local data2 = require(myModule)
-end
--- because `myModule` is no longer accessible, its cache and loaded info can be
--- safely disposed of without observable side effects
-```
-
-These objects are intentionally not compatible with `setfenv()` or `getfenv()`.
-
-```Lua
-getfenv(module) --> invalid argument #1 to 'getfenv' (number expected, got module)
-```
-
 `loadmodule` accepts an optional table to configure how the module is loaded.
 
 For now, only a minimal set of static sandboxing options are provided, to allow
@@ -127,6 +106,27 @@ local foo = os.loadmodule("../foo/bar", {
         end }
     }
 })
+```
+
+When no references are left to a `module` object, it will be garbage collected, and the Luau VM is allowed to free any loaded module information or caches related to that module. Garbage collection behaviour is the key motivator for `module` objects.
+
+```Lua
+do
+    -- module is loaded here
+    local myModule = os.loadmodule("../foo/bar")
+    -- the returned value is internally cached here
+    local data = require(myModule)
+    -- the cache can be used here
+    local data2 = require(myModule)
+end
+-- because `myModule` is no longer accessible, its cache and loaded info can be
+-- safely disposed of without observable side effects
+```
+
+These objects are intentionally not compatible with `setfenv()` or `getfenv()`.
+
+```Lua
+getfenv(module) --> invalid argument #1 to 'getfenv' (number expected, got module)
 ```
 
 ## Drawbacks
