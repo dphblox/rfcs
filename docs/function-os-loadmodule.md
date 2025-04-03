@@ -143,7 +143,7 @@ By allowing users some control over the environment, we may have to disable some
 
 In theory, `loadmodule()` could return a function chunk instead of a module object:
 
-```
+```Lua
 local module = os.loadmodule("../foo/bar")
 print(typeof(module)) --> function
 
@@ -163,7 +163,7 @@ cleanup callback for this purpose, but this could easily be overlooked,
 especially since it's the third returned value and can be dropped during
 assignment with no consequences.
 
-```
+```Lua
 -- the cleanup function is dropped here! this will leak memory
 moduleFunction = debug.loadmodule(modulePath)
 ```
@@ -171,7 +171,7 @@ moduleFunction = debug.loadmodule(modulePath)
 Additionally, if the user tries to print the function chunk, there's no
 opportunity to provide a useful debug representation:
 
-```lua
+```Lua
 print(module) --> function: 0x123456789abcdef
 ```
 
