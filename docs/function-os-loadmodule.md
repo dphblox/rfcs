@@ -178,3 +178,19 @@ print(module) --> function: 0x123456789abcdef
 For this reason, it was chosen to return a module object instead, which can
 automatically free any caches on collection, which is explicitly incompatible
 with function-based APIs, and which can provide convenient debugging behaviour.
+
+### Don't do anything
+
+There is a large cost to not doing anything. Roblox's own Jest library relies
+inseparably on cache control and sandboxing for modules, which is used widely
+on very large codebases. Internal benchmarks demonstrate a substantial
+performance hit from using today's existing workarounds as most user code runs
+without optimisations enabled.
+
+Furthermore, there is a hidden memory cost for today's status quo. A common way
+to work around Roblox's implementation of the require cache is to clone module
+instances so that they are freshly cached each time. Since this cache remains
+until the end of the session, the memory usage of the project will increase
+monotonically with each require. Some projects have been observed doing this in
+the wild, showing that there is user demand for this feature. As such, by not
+implementing this, we continue to encourage excessive memory consumption.
