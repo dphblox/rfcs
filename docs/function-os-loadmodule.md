@@ -44,9 +44,7 @@ local module2 = os.loadmodule("../foo/bar")
 print(module == module2) --> false
 ```
 
-`loadmodule()` accepts a string path in all Luau environments according to the require-by-string RFC. It may also accept other environment-specific module paths, like Roblox instance references. 
-
-*(Open question: should we get rid of asset ID requires?)*
+`loadmodule()` accepts a string path in all Luau environments according to the require-by-string RFC. It may also accept other environment-specific module paths, like Roblox instance references.
 
 When passed into `require`, the loaded module will be run, and the result will conceptually be cached "inside of" the module object. That is to say, if two modules are `==`, they will share the same cache.
 
