@@ -28,7 +28,7 @@ This mirrors pipeline operators in languages like F#, OCaml, Hack, Julia and Eli
 ## Motivation
 
 Composition is a key part of modern clean code; it encourages modular design of functions with single responsibilities.
-For example, the `string` library contains multiple built-in operations which are small and well-scoped.
+For example, the `string` and `tableext` libraries contain multiple operations which are small and well-scoped.
 These operations can be combined to build more complex operations.
 
 ```luau
@@ -61,9 +61,6 @@ local function parse_csv(raw_text: string): {{string}}
     return cells
 end
 ```
-
-Beyond builtins, this is often seen in the wild in libraries like Fusion (or generally in OOP as the builder pattern) - in these cases, the member index is often routed through the `__index` metamethod, further complicating static analysis.
-This can mask errors that would otherwise be trivial to lint for, and comes with the aforementioned overhead.
 
 To fix this ideally without a performance hit and with forwards compatibility, we would want to look up functions in the current scope, not inside of the operand, such that Luau can trivially guarantee which function will be called at each step.
 
