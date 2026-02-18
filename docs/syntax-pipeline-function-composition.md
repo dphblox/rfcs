@@ -46,21 +46,15 @@ In the above snippet, the programmer would read `string.split` before `string.gs
 
 In addition to this, nested parentheses that span multiple lines do not cleanly diff in version control software, as it pollutes the patch with incidental changes to indentation level or trailing punctuation.
 
-In an attempt to more ergonomically express the pipeline of operations, users resort to method chaining. However:
-- We generally discourage method use for builtin library functions, as this defeats some optimisations.
-- Method use relies on the operand exposing the required methods as indexable members - it is dangerous to extend to newer libraries like `tableext`.
+In an attempt to more ergonomically express the pipeline of operations, users may attempt to chain methods.
+Some Luau primitives like strings expose such methods, which we don't prefer users to rely on because it complicates static analysis and inhibits some function call optimisations.
 
 ```luau
-local tableext = require("@std/tableext")
-
-local function parse_csv(raw_text: string): {{string}}
-    -- The order is clearer, but Luau can't guarantee this will call the `string` builtins, so it's slower.
-    local lines = raw_text:gsub("\n\r", "\n"):split("\n")
-    -- There's nothing we can do about this line given current syntax.
-    local cells = tableext.map(lines, function(line) return string.split(line, ",") end)
-    return cells
-end
+local lines = raw_text:gsub("\n\r", "\n"):split("\n")
 ```
+
+It also relies on the operand exposing the required methods as indexable members.
+That means it is dangerous to extend to newer libraries like `tableext`, which arguably stand to benefit _more_ from ergonomic compositions due to new map/filter/reduce APIs being introduced for list manipulation.
 
 To fix this ideally without a performance hit and with forwards compatibility, we would want to look up functions in the current scope, not inside of the operand, such that Luau can trivially guarantee which function will be called at each step.
 
