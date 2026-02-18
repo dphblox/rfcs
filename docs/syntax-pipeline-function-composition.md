@@ -7,9 +7,9 @@ Add a new pipeline operator that allows a value to be passed through multiple co
 A function call composition like this:
 
 ```luau
-f(
+h(
   g(
-    h(5)
+    f(5)
   )
 )
 ```
