@@ -59,7 +59,7 @@ Towards our goal of users being able to freely choose different interoperable to
 
 ## Design
 
-We propose the introduction of a new function - distinct from `require` - which loads Luau files in a `.config` sandbox. It is available for use in all kinds of Luau module, configuration or not.
+As one chosen solution of multiple to this problem, we propose the introduction of a new function - distinct from `require` - which loads Luau files in a `.config` sandbox. It is available for use in all kinds of Luau module, configuration or not.
 
 To allow the library to be permitted in isolation in the `.config` sandbox, we locate it in a special `@std/config` library, where we can guarantee all members operate in a config environment. All other requires still fail to resolve in order to keep the config sandbox sealed.
 
