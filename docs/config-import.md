@@ -79,7 +79,7 @@ Some nuances of this function's behaviour:
 
 - `config.load` may cache its returned result, as configuration files should not have side effects, and this permits greater efficiency when dealing with widely-used configuration files
 - `config.load` errors when it detects a cyclic load between two modules.
-- The path passed to `config.load` does not recognise any config-provided aliases. It only recognises built-in aliases such as `@self`.
+- In a config environment, the path passed to `config.load` does not recognise any config-provided aliases. It only recognises built-in aliases such as `@self`.
 
 ## Drawbacks
 
