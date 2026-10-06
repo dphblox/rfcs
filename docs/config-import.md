@@ -17,9 +17,11 @@ In doing so, we found a core conflict:
 
 This leaves automations that update aliases nowhere to record _their_ intent cleanly without possibly overriding user intent.
 
+Ideally, the user could explicitly choose to integrate or rename aliases imported from automations, and retain control over what their scripting environment looks like, which points towards configurations using values from elsewhere.
+
 ### Sharing configuration widely
 
-We also recognise the existence of a third problem: some configurations are shared widely, and we want to lower the cost of updating these values across multiple configuration files and ensure they don't fall out of sync with each other.
+We also recognise the existence of another problem: some configurations are shared widely, and we want to lower the cost of updating these values across multiple configuration files and ensure they don't fall out of sync with each other.
 
 The typical example is a build system that synchronises metadata between a workspace of packages.
 
