@@ -8,8 +8,6 @@ Introduce `.modules`: a machine-writable sibling to `.config` that configures a 
 - Runtimes read a single composed `.modules` and can mostly pass it to Luau.
 - Luau adopts minimal resolution logic that runtimes can choose to extend, if they care to.
 
----
-
 ## Motivation
 
 Build systems, workspaces, project managers, bundlers, package installers and other tools need some way of communicating machine-generated configuration to the runtime, in a way that doesn't clobber user intent.
@@ -78,8 +76,6 @@ We need something beyond deduplication-by-alias.
 - The abstract module hierarchy and its configuration should not be strictly tied to on-disk layout.
 - Source code on-disk is treated as a source of bytes, not as a literal part of the abstract module hierarchy.
 
----
-
 ## Design
 
 We introduce `.modules` as a sibling to `.config`, which encodes data about a whole module hierarchy at this location.
@@ -113,7 +109,7 @@ my-game/
 └── src/
 ```
 
-The runtime reads one composed `.modules`, and that's the only part this RFC standardises. Composition is a tooling concern - if you disagree with these tools, you're able to write your own, by design.
+The runtime reads one composed `.modules`, which is the the only part this RFC standardises. Composition beyond that is a tooling concern - if you disagree with these tools, you're able to write your own, by design.
 
 Tooling is free to enhance this experience as it sees fit: for instance, `lute run` can regenerate `.modules` when its inputs change, tracking them in a git-ignorable cache. That way, users who don't care about `.modules` never need to see it. 
 
@@ -172,8 +168,6 @@ Runtimes may add non-standard source types without breaking the universal standa
 ### Composition
 
 All of this is designed to compose neatly: a tool that wishes to combine two `.modules` can do so by evaluating each `.modules`'s return value, performing a table merge, and writing the new `.modules` out to disk.
-
----
 
 ## Worked example
 
@@ -252,17 +246,13 @@ return {
 }
 ```
 
----
-
 ## Drawbacks
 
-**Another configuration surface**: Users and tools now have two places where configuration can live. Someone debugging an unexpected alias or lint setting may need to check both `.config` and `.modules`, and understand how they interact.
+**Another configuration surface**: Users and tools now have two places where configuration can live. Someone debugging an unexpected alias or lint setting may need to check both `.config` and `.modules`, and understand how they interact. Our original design pushed back on this, but the Luau team pointed out that this is relatively unavoidable if you're aiming to keep user intent separate from machine-generated configuration.
 
-**Runtime adoption**: Every runtime that wants to benefit must implement reading `.modules`, including Roblox. Until a runtime does, tools targeting it can't rely on `.modules`.
+**Runtime adoption**: Every runtime that wants to benefit must implement reading `.modules`, including Roblox. Until a runtime does, tools targeting it can't rely on `.modules`. We seriously weighed the impact of this during discussion, and it motivated our drive to keep runtime cost minimal, as it's been rightfully pointed out in previous RFCs that users outside the Roblox and Lute ecosystems already don't fully implement our spec; a complex feature would drive a further wedge here.
 
 **Staleness**: The composed `.modules` is derived from its inputs. If it isn't regenerated after an input changes, the runtime will see out-of-date configuration. Tooling such as `lute run` can mitigate this, but runtimes that don't regenerate it themselves leave this to the user.
-
----
 
 ## Alternatives
 
